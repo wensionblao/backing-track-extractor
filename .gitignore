@@ -1,0 +1,32 @@
+# python
+.venv/
+.uv-cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# 运行时产物（jobs/uploads/models/tools/auth.json 全在里面）
+storage/
+
+# 环境变量（含 Cookie 等敏感配置）
+.env
+
+# web
+web/node_modules/
+web/dist/
+web/.vite/
+
+# 日志
+*.log
+
+# 本地产物（不入库）
+.screenshots/
+.trae/
+scripts/
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

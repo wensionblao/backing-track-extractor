@@ -1,0 +1,140 @@
+/* ------------------------------------------------------------------
+   拆声 STEMS · design tokens
+   默认日间模式（白天录音棚）；:root[data-theme='dark'] 为深夜录音棚
+   颜色一律通过变量引用，组件里不允许再硬编码纸色/墨色
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  /* ink & surfaces（日间） */
+  --ink: #f4f3ee;
+  --ink-2: #ecebe4;
+  --panel: #ffffff;
+  --panel-2: #f6f5f0;
+  --panel-3: #efeee8;
+  --paper: #16181d;
+  --paper-dim: #3b3f47;
+  --muted: #4d545f;
+  --muted-2: #6b7280;
+
+  /* 供 rgba(var(--paper-rgb), x) 使用：文字基准色 */
+  --paper-rgb: 22, 24, 29;
+  /* 供 rgba(var(--ink-rgb), x) 使用：底色基准色 */
+  --ink-rgb: 244, 243, 238;
+
+  /* signal colours */
+  --lime: #7fb511;
+  --lime-rgb: 127, 181, 17;
+  --lime-soft: rgba(127, 181, 17, 0.14);
+  --gold: #b07f1e;
+  --gold-rgb: 176, 127, 30;
+  --gold-soft: rgba(176, 127, 30, 0.14);
+  --violet: #6a4fe0;
+  --violet-rgb: 106, 79, 224;
+  --violet-soft: rgba(106, 79, 224, 0.12);
+  --rose: #e1306c;
+  --rose-rgb: 225, 48, 108;
+  --rose-soft: rgba(225, 48, 108, 0.12);
+  --danger: #d64545;
+
+  /* lines */
+  --line: rgba(22, 24, 29, 0.1);
+  --line-2: rgba(22, 24, 29, 0.17);
+  --line-3: rgba(22, 24, 29, 0.28);
+
+  /* page backdrop（body 渐变叠加） */
+  --bg-gradient:
+    radial-gradient(900px 520px at 78% -8%, rgba(106, 79, 224, 0.09), transparent 62%),
+    radial-gradient(700px 440px at 8% 4%, rgba(127, 181, 17, 0.08), transparent 60%),
+    radial-gradient(900px 600px at 50% 112%, rgba(176, 127, 30, 0.07), transparent 65%),
+    linear-gradient(180deg, #f4f3ee 0%, #f0efe9 42%, #f4f3ee 100%);
+
+  /* type */
+  --sans: 'Sora', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* geometry */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --shell: 1240px;
+  --gap: 20px;
+
+  /* motion */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --fast: 140ms var(--ease);
+  --mid: 280ms var(--ease);
+  --slow: 640ms var(--ease);
+
+  /* shadow */
+  --glow-lime: 0 0 0 1px rgba(127, 181, 17, 0.36), 0 18px 60px rgba(127, 181, 17, 0.16);
+  --glow-gold: 0 0 0 1px rgba(176, 127, 30, 0.4), 0 24px 70px rgba(176, 127, 30, 0.16);
+  --shadow-panel: 0 20px 50px rgba(22, 24, 29, 0.1);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* ink & surfaces（深夜录音棚） */
+  --ink: #06070a;
+  --ink-2: #090b10;
+  --panel: #0d0f14;
+  --panel-2: #11141b;
+  --panel-3: #171b24;
+  --paper: #f2f1ec;
+  --paper-dim: #c9c8c1;
+  --muted: #9aa1ae;
+  --muted-2: #7a8090;
+
+  --paper-rgb: 242, 241, 236;
+  --ink-rgb: 6, 7, 10;
+
+  /* signal colours（暗底用高明度） */
+  --lime: #c8ff4d;
+  --lime-rgb: 200, 255, 77;
+  --lime-soft: rgba(200, 255, 77, 0.14);
+  --gold: #e8b04b;
+  --gold-rgb: 232, 176, 75;
+  --gold-soft: rgba(232, 176, 75, 0.14);
+  --violet: #7a5cff;
+  --violet-rgb: 122, 92, 255;
+  --violet-soft: rgba(122, 92, 255, 0.16);
+  --rose: #ff4d8d;
+  --rose-rgb: 255, 77, 141;
+  --rose-soft: rgba(255, 77, 141, 0.14);
+  --danger: #ff6b6b;
+
+  /* lines */
+  --line: rgba(242, 241, 236, 0.08);
+  --line-2: rgba(242, 241, 236, 0.14);
+  --line-3: rgba(242, 241, 236, 0.24);
+
+  --bg-gradient:
+    radial-gradient(900px 520px at 78% -8%, rgba(122, 92, 255, 0.12), transparent 62%),
+    radial-gradient(700px 440px at 8% 4%, rgba(200, 255, 77, 0.07), transparent 60%),
+    radial-gradient(900px 600px at 50% 112%, rgba(232, 176, 75, 0.06), transparent 65%),
+    linear-gradient(180deg, #06070a 0%, #07080c 42%, #06070a 100%);
+
+  --glow-lime: 0 0 0 1px rgba(200, 255, 77, 0.32), 0 18px 60px rgba(200, 255, 77, 0.1);
+  --glow-gold: 0 0 0 1px rgba(232, 176, 75, 0.4), 0 24px 70px rgba(232, 176, 75, 0.12);
+  --shadow-panel: 0 28px 80px rgba(0, 0, 0, 0.55);
+}
+
+/* 用户系统要求高对比时，进一步提升日间模式的文字可读性 */
+@media (prefers-contrast: more) {
+  :root {
+    --muted: #3f4650;
+    --muted-2: #575e6a;
+    --line: rgba(22, 24, 29, 0.16);
+    --line-2: rgba(22, 24, 29, 0.26);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fast: 0ms linear;
+    --mid: 0ms linear;
+    --slow: 0ms linear;
+  }
+}
