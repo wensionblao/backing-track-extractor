@@ -125,16 +125,6 @@ export function Studio({
                   .map((item) => item.label)
                   .join(' / ') || '—'}
               </p>
-
-              <div className="quota" style={{ marginTop: 16 }}>
-                <div className="quota__top">
-                  <span className="quota__label">使用方式</span>
-                  <span className="quota__value">
-                    <b>全功能免费</b> · 全套五轨 + ZIP
-                  </span>
-                </div>
-                <span className="quota__note">本工具完全免费，不限制使用次数，本地运行不上传账号。</span>
-              </div>
             </div>
           </aside>
         </div>

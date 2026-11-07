@@ -1,12 +1,14 @@
 import { artists } from '../lib/format'
 import type { JobView } from '../lib/types'
+import type { View } from './Nav'
 import { ArrowIcon } from './Icons'
 
 interface ConsoleBarProps {
   job: JobView | null
+  onNavigate: (view: View, anchor?: string) => void
 }
 
-export function ConsoleBar({ job }: ConsoleBarProps) {
+export function ConsoleBar({ job, onNavigate }: ConsoleBarProps) {
   const show = Boolean(job)
   const done = job?.state === 'done'
   const failed = job?.state === 'failed'
@@ -34,10 +36,14 @@ export function ConsoleBar({ job }: ConsoleBarProps) {
           </div>
           <div className="consolebar__right">
             {done ? (
-              <a className="btn btn--lime btn--small" href="#studio">
+              <button
+                type="button"
+                className="btn btn--lime btn--small"
+                onClick={() => onNavigate('workbench', 'studio')}
+              >
                 查看分轨台
                 <ArrowIcon size={13} />
-              </a>
+              </button>
             ) : (
               <span className="chip chip--lime">{failed ? 'FAILED' : `${job.progress}%`}</span>
             )}

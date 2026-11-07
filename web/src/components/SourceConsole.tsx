@@ -42,7 +42,7 @@ interface UiError {
   hint: string
 }
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 4
 
 export function SourceConsole({
   selectedId,
@@ -61,6 +61,7 @@ export function SourceConsole({
   const [link, setLink] = useState('')
   const [resolving, setResolving] = useState(false)
   const [pickingId, setPickingId] = useState<string | null>(null)
+  const [pickErrorId, setPickErrorId] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [drag, setDrag] = useState(false)
   const fileRef = useRef<HTMLInputElement | null>(null)
@@ -68,6 +69,7 @@ export function SourceConsole({
   const switchTab = (next: SourceId) => {
     setTab(next)
     setError(null)
+    setPickErrorId(null)
     setResults([])
     setPage(0)
   }
@@ -77,6 +79,7 @@ export function SourceConsole({
     if (!q || searching) return
     setSearching(true)
     setError(null)
+    setPickErrorId(null)
     try {
       const data = await api.search(tab, q)
       setResults(data.items)
@@ -97,19 +100,20 @@ export function SourceConsole({
     if (pickingId) return
     setPickingId(track.id)
     setError(null)
+    setPickErrorId(null)
     try {
       const resolved = await api.resolve(track.source, track.id)
       if (!resolved.playable) {
-        setError({
-          code: 'URL_UNAVAILABLE',
-          message: resolved.reason || '该曲目需要登录或 VIP 才能获取播放地址',
-          hint: '可在 .env 配置平台 Cookie 后重试；或改用本地上传。',
-        })
+        setPickErrorId(track.id)
         return
       }
       onPickTrack(resolved.track, true, '')
     } catch (exc) {
       const err = exc as ApiError
+      if (err.code === 'URL_UNAVAILABLE') {
+        setPickErrorId(track.id)
+        return
+      }
       setError({ code: err.code, message: err.message, hint: err.hint })
     } finally {
       setPickingId(null)
@@ -121,6 +125,7 @@ export function SourceConsole({
     if (!value || resolving) return
     setResolving(true)
     setError(null)
+    setPickErrorId(null)
     try {
       const resolved = await api.resolve(tab, value)
       onPickTrack(resolved.track, resolved.playable, resolved.reason)
@@ -140,6 +145,7 @@ export function SourceConsole({
     }
     setUploading(true)
     setError(null)
+    setPickErrorId(null)
     try {
       const result = await api.upload(file)
       onUpload(result)
@@ -257,31 +263,43 @@ export function SourceConsole({
 
                 <div className="results" role="list" aria-label="搜索结果">
                   {results.length > 0 ? (
-                    pageItems.map((item, index) => (
-                      <button
-                        key={`${item.source}-${item.id}`}
-                        type="button"
-                        role="listitem"
-                        className={`result ${selectedId === item.id ? 'result--active' : ''}`}
-                        onClick={() => void pick(item)}
-                        disabled={pickingId === item.id}
-                      >
-                        <span className="result__index">
-                          {String(safePage * PAGE_SIZE + index + 1).padStart(2, '0')}
-                        </span>
-                        <Cover track={item} />
-                        <span className="result__body">
-                          <span className="result__name">{item.name || '未命名曲目'}</span>
-                          <span className="result__meta">
-                            {artists(item.artist)}
-                            {item.album ? ` · ${item.album}` : ''}
-                          </span>
-                        </span>
-                        <span className="result__time">
-                          {pickingId === item.id ? '校验…' : clock(item.duration)}
-                        </span>
-                      </button>
-                    ))
+                    pageItems.map((item, index) => {
+                      const failed = pickErrorId === item.id
+                      return (
+                        <div
+                          key={`${item.source}-${item.id}`}
+                          className="result-item"
+                          role="listitem"
+                        >
+                          <button
+                            type="button"
+                            className={`result ${selectedId === item.id ? 'result--active' : ''} ${failed ? 'result--error' : ''}`}
+                            onClick={() => void pick(item)}
+                            disabled={pickingId === item.id}
+                          >
+                            <span className="result__index">
+                              {String(safePage * PAGE_SIZE + index + 1).padStart(2, '0')}
+                            </span>
+                            <Cover track={item} />
+                            <span className="result__body">
+                              <span className="result__name">{item.name || '未命名曲目'}</span>
+                              <span className="result__meta">
+                                {artists(item.artist)}
+                                {item.album ? ` · ${item.album}` : ''}
+                              </span>
+                            </span>
+                            <span className="result__time">
+                              {pickingId === item.id ? '校验…' : clock(item.duration)}
+                            </span>
+                          </button>
+                          {failed ? (
+                            <div className="result-error" role="alert">
+                              需要登录或 VIP 才能获取播放地址
+                            </div>
+                          ) : null}
+                        </div>
+                      )
+                    })
                   ) : (
                     <div className="empty">
                       <b>还没有候选曲目</b>
@@ -296,7 +314,10 @@ export function SourceConsole({
                       type="button"
                       className="pager__btn"
                       disabled={safePage === 0}
-                      onClick={() => setPage(safePage - 1)}
+                      onClick={() => {
+                        setPage(safePage - 1)
+                        setPickErrorId(null)
+                      }}
                       aria-label="上一页"
                     >
                       ← 上一页
@@ -308,7 +329,10 @@ export function SourceConsole({
                       type="button"
                       className="pager__btn"
                       disabled={safePage >= pageCount - 1}
-                      onClick={() => setPage(safePage + 1)}
+                      onClick={() => {
+                        setPage(safePage + 1)
+                        setPickErrorId(null)
+                      }}
                       aria-label="下一页"
                     >
                       下一页 →

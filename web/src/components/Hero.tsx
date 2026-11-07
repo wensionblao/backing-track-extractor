@@ -1,7 +1,12 @@
 import { WaveStage } from './WaveStage'
 import { ArrowIcon, SparkIcon } from './Icons'
+import type { View } from './Nav'
 
-export function Hero() {
+interface HeroProps {
+  onNavigate: (view: View, anchor?: string) => void
+}
+
+export function Hero({ onNavigate }: HeroProps) {
   return (
     <section className="hero" id="top">
       <div className="shell hero__grid">
@@ -24,13 +29,13 @@ export function Hero() {
           </p>
 
           <div className="hero__actions">
-            <a className="btn btn--lime" href="#console">
+            <button className="btn btn--lime" type="button" onClick={() => onNavigate('workbench', 'console')}>
               开始分离
               <ArrowIcon />
-            </a>
-            <a className="btn btn--ghost" href="#studio">
+            </button>
+            <button className="btn btn--ghost" type="button" onClick={() => onNavigate('workbench', 'studio')}>
               看分轨台示例
-            </a>
+            </button>
           </div>
 
           <dl className="hero__meta">

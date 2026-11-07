@@ -113,6 +113,17 @@ code,
   text-align: center;
 }
 
+/* 页面根节点：让主内容撑满视口，footer 始终贴住页面底部 */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#root > main {
+  flex: 1 0 auto;
+}
+
 .boot-mark {
   font-family: var(--mono);
   font-size: 13.5px;

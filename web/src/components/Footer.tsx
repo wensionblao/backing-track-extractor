@@ -28,10 +28,10 @@ export function Footer({ healthOk, onNavigate }: FooterProps) {
 
         <div className="footer__col">
           <h4>工作台</h4>
-          <button type="button" onClick={() => onNavigate('home', 'console')}>
+          <button type="button" onClick={() => onNavigate('workbench', 'console')}>
             取歌控制台
           </button>
-          <button type="button" onClick={() => onNavigate('home', 'studio')}>
+          <button type="button" onClick={() => onNavigate('workbench', 'studio')}>
             分轨台
           </button>
           <button type="button" onClick={() => onNavigate('faq')}>

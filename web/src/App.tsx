@@ -151,7 +151,7 @@ export default function App() {
 
   const navigate = (next: View, anchor?: string) => {
     setView(next)
-    if (next === 'home' && anchor) {
+    if (anchor) {
       window.setTimeout(() => {
         document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }, 60)
@@ -172,9 +172,9 @@ export default function App() {
 
       <main>
         {view === 'home' ? (
+          <Hero onNavigate={navigate} />
+        ) : view === 'workbench' ? (
           <>
-            <Hero />
-
             <SourceConsole
               selectedId={track?.id ?? null}
               track={track}
@@ -210,7 +210,7 @@ export default function App() {
 
       <Footer healthOk={Boolean(health?.ok)} onNavigate={navigate} />
 
-      <ConsoleBar job={job} />
+      <ConsoleBar job={job} onNavigate={navigate} />
 
       {toast ? <div className="toast">{toast}</div> : null}
     </>

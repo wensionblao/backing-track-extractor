@@ -92,6 +92,28 @@ def _parse_song(raw: dict) -> ResolvedTrack:
     )
 
 
+async def _fill_covers(tracks: list[ResolvedTrack], client: httpx.AsyncClient) -> None:
+    """经典搜索接口不返回专辑封面（仅 picId），用详情接口补齐。"""
+    missing = [track.id for track in tracks if not track.cover]
+    if not missing:
+        return
+    try:
+        response = await client.get(
+            "https://music.163.com/api/song/detail", params={"ids": json.dumps(missing)}
+        )
+        payload = response.json()
+    except (httpx.HTTPError, ValueError):
+        return
+    covers: dict[str, str] = {}
+    for item in payload.get("songs") or []:
+        if not isinstance(item, dict):
+            continue
+        album = item.get("al") or item.get("album") or {}
+        covers[str(item.get("id"))] = album.get("picUrl") or ""
+    for track in tracks:
+        track.cover = covers.get(track.id) or track.cover
+
+
 async def search(query: str, limit: int = 12) -> list[ResolvedTrack]:
     params = {
         "csrf_token": "",
@@ -115,7 +137,9 @@ async def search(query: str, limit: int = 12) -> list[ResolvedTrack]:
             )
             payload = response.json()
             songs = (payload.get("result") or {}).get("songs") or []
-    return [_parse_song(item) for item in songs if item.get("id")]
+        tracks = [_parse_song(item) for item in songs if item.get("id")]
+        await _fill_covers(tracks, client)
+    return tracks
 
 
 async def detail(song_id: str) -> ResolvedTrack:

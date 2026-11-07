@@ -2,7 +2,7 @@ import type { Health } from '../lib/types'
 import { BrandMark, MoonIcon, SunIcon } from './Icons'
 
 export type ThemeMode = 'day' | 'night'
-export type View = 'home' | 'faq'
+export type View = 'home' | 'workbench' | 'faq'
 
 interface NavProps {
   health: Health | null
@@ -26,7 +26,7 @@ export function Nav({ health, theme, view, onToggleTheme, onNavigate }: NavProps
           aria-label="拆声 STEMS 首页"
           onClick={(event) => {
             event.preventDefault()
-            onNavigate('home', 'top')
+            onNavigate('home')
           }}
         >
           <span className="brand__mark">
@@ -40,18 +40,11 @@ export function Nav({ health, theme, view, onToggleTheme, onNavigate }: NavProps
 
         <nav className="nav__links" aria-label="主导航">
           <button
-            className={`nav__link ${view === 'home' ? 'nav__link--active' : ''}`}
+            className={`nav__link ${view === 'workbench' ? 'nav__link--active' : ''}`}
             type="button"
-            onClick={() => onNavigate('home', 'console')}
+            onClick={() => onNavigate('workbench')}
           >
-            取歌
-          </button>
-          <button
-            className={`nav__link ${view === 'home' ? 'nav__link--active' : ''}`}
-            type="button"
-            onClick={() => onNavigate('home', 'studio')}
-          >
-            分轨台
+            工作台
           </button>
           <button
             className={`nav__link ${view === 'faq' ? 'nav__link--active' : ''}`}
